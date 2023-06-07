@@ -10,7 +10,9 @@ namespace Player.Movement
         [SerializeField] [Range(0f, 7f)] private float moveSpeed = 1f;
         [SerializeField] [Range(8f, 20f)] private float runSpeed = 8f;
         [SerializeField] [Range(1f, 40f)] private float jumpForce = 25f;
-        [SerializeField] private float groundDrag = 2f;
+        [SerializeField] [Range(0f, 10f)] private float groundDrag = 2f;
+        [SerializeField] [Range(0f, 10f)] private float airDrag = 0f;
+        [SerializeField] [Range(0f, 2f)] private float glideMultiplier = 1.5f;
 
         [Header("Ground Detection")] 
         [SerializeField] private Transform groundOrigin;
@@ -24,10 +26,10 @@ namespace Player.Movement
         //Internally needed parameters
         private Rigidbody _rb;
         private float _horizontal, _vertical;
-        private float _forceMultiplier = 10f;
+        private readonly float _forceMultiplier = 10f;
         private float _speed;
-        private RaycastHit _groundHit; 
-        
+        private RaycastHit _groundHit;
+
         //Internally changed parameters
         public bool Grounded { get; private set; }
 
@@ -70,12 +72,19 @@ namespace Player.Movement
         /// <summary>
         /// This method deals with player's flat movement.
         /// It gets a direction derived by input and adds force to the rigidbody respectively.
-        /// Behavior may change if player is grounded or gliding.
+        /// Behavior may change if player is grounded or gliding (manly determined by "glideMultiplier").
         /// </summary>
         private void Move()
         {
-            if (Grounded) _rb.AddForce(MoveDirection() * (_speed * _forceMultiplier), ForceMode.Force);
-            else if (!Grounded) _rb.AddForce(MoveDirection() * (_speed * _forceMultiplier * 2), ForceMode.Force);
+            switch (Grounded)
+            {
+                case true:
+                    _rb.AddForce(MoveDirection() * (_speed * _forceMultiplier), ForceMode.Force);
+                    break;
+                case false:
+                    _rb.AddForce(MoveDirection() * (_speed * _forceMultiplier * glideMultiplier), ForceMode.Force);
+                    break;
+            }
         }
 
         /// <summary>
@@ -141,8 +150,7 @@ namespace Player.Movement
         /// </summary>
         private void ApplyDrag()
         {
-            if (Grounded) _rb.drag = groundDrag;
-            else _rb.drag = 0;
+            _rb.drag = Grounded ? groundDrag : airDrag;
         }
         
         /// <summary>

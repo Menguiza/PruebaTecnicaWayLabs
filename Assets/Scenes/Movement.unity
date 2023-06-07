@@ -560,6 +560,8 @@ MonoBehaviour:
   runSpeed: 10
   jumpForce: 25
   groundDrag: 2
+  airDrag: 0
+  glideMultiplier: 1.5
   groundOrigin: {fileID: 622231018}
   groundCheckLength: 0.1
   whatIsGround:

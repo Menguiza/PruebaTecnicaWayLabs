@@ -32,12 +32,13 @@ namespace Player.Movement
 
         //Internally changed parameters
         public bool Grounded { get; private set; }
+        public Vector3 Dir { get => body.forward * _vertical + body.right * _horizontal; }
 
         private void Awake()
         {
             //Cursor set up
             Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.Locked;
             
             //Rigidbody reference (Obey "RequireComponent" restriction)
             _rb = GetComponent<Rigidbody>();
@@ -59,6 +60,9 @@ namespace Player.Movement
             
             //Correct Speed
             SpeedLimit();
+            
+            //Check if Cursor is visible
+            if (Cursor.visible) Cursor.visible = false;
         }
 
         private void FixedUpdate()

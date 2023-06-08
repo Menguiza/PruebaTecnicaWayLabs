@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Daniel Hoyos/Grab and Drop.unity
+    guid: 249d20273af5c994387559e4aeb1b07d
   m_configObjects: {}

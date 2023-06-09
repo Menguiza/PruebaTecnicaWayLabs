@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Player.Movement
 {
@@ -27,7 +29,7 @@ namespace Player.Movement
         private Rigidbody _rb;
         private float _horizontal, _vertical;
         private readonly float _forceMultiplier = 10f;
-        private float _speed;
+        private float _speed, _angle;
         private RaycastHit _groundHit;
 
         //Internally changed parameters
@@ -42,7 +44,7 @@ namespace Player.Movement
             
             //Rigidbody reference (Obey "RequireComponent" restriction)
             _rb = GetComponent<Rigidbody>();
-            
+
             //Initial speed set up
             _speed = runSpeed;
         }
@@ -80,10 +82,12 @@ namespace Player.Movement
         /// </summary>
         private void Move()
         {
+            _angle = Vector3.Angle(Vector3.up, _groundHit.normal);
+            
             switch (Grounded)
             {
                 case true:
-                    _rb.AddForce(MoveDirection() * (_speed * _forceMultiplier), ForceMode.Force);
+                    _rb.AddForce(MoveDirection() * ((_speed + _angle/_forceMultiplier) * _forceMultiplier), ForceMode.Force);
                     break;
                 case false:
                     _rb.AddForce(MoveDirection() * (_speed * _forceMultiplier * glideMultiplier), ForceMode.Force);
@@ -168,7 +172,7 @@ namespace Player.Movement
         {
             Vector3 flatVel = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
 
-            if (flatVel.magnitude > _speed)
+            if (flatVel.magnitude > (_speed + _angle/_forceMultiplier))
             {
                 Vector3 limitedVel = flatVel.normalized * _speed;
                 _rb.velocity = new Vector3(limitedVel.x, _rb.velocity.y, limitedVel.z);

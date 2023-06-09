@@ -32,6 +32,11 @@ namespace Player.ObjectGrabbing
         private RaycastHit _hit;
         private bool _handsBusy, _incrementThrow, _firstRelease = true;
         private float _throwForce, _blendTimer;
+        
+        //Accessors
+        public bool HandsBusy => _handsBusy;
+        public float DetectionRange => detectionRange;
+        public Transform ItemInhold => _hit.transform;
 
         void Update()
         {

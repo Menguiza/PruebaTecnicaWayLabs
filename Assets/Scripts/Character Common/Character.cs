@@ -10,7 +10,7 @@ namespace Character_Common
         
         //Internally needed parameters
         private int _maxHealth, _currentHealth;
-        private bool _hasDied;
+        protected bool HasDied;
         
         //Accessors
         public int MaxHealth
@@ -59,7 +59,7 @@ namespace Character_Common
             CurrentHealth -= damage;
             
             //Check for die condition
-            if (CurrentHealth == 0 && !_hasDied) ((IDamageable)this).Die();
+            if (CurrentHealth == 0 && !HasDied) ((IDamageable)this).Die();
         }
 
         public void AddHealth(int healing)
@@ -69,7 +69,7 @@ namespace Character_Common
 
         void IDamageable.Die()
         {
-            _hasDied = true;
+            HasDied = true;
         }
 
         #endregion 

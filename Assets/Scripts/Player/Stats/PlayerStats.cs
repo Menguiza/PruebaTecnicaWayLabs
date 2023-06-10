@@ -2,6 +2,7 @@ using System.Collections;
 using Character_Common;
 using Player.Movement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Player.Stats
@@ -29,6 +30,8 @@ namespace Player.Stats
         {
             //Update bar value depending on current health
             UpdateBar();
+
+            if (HasDied) SceneManager.LoadScene(1);
         }
 
         #region Methods

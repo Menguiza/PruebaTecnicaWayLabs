@@ -22,7 +22,21 @@ namespace Character_Common
         public int CurrentHealth
         {
             get => _currentHealth;
-            set => _currentHealth = value >= 0 ? value : 0;
+            set
+            {
+                if (value >= 0 && value <= maxHealth)
+                {
+                    _currentHealth = value;
+                }
+                else if (value < 0)
+                {
+                    _currentHealth = 0;
+                }
+                else
+                {
+                    _currentHealth = maxHealth;
+                }
+            }
         }
 
         private void Awake()
@@ -46,6 +60,11 @@ namespace Character_Common
             
             //Check for die condition
             if (CurrentHealth == 0 && !_hasDied) ((IDamageable)this).Die();
+        }
+
+        public void AddHealth(int healing)
+        {
+            CurrentHealth += healing;
         }
 
         void IDamageable.Die()

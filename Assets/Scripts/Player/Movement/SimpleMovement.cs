@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Player.Movement
 {
@@ -35,6 +33,9 @@ namespace Player.Movement
         //Internally changed parameters
         public bool Grounded { get; private set; }
         public Vector3 Dir { get => body.forward * _vertical + body.right * _horizontal; }
+        
+        //Accessors
+        public Vector2 SpeedAxis => new Vector2(moveSpeed, runSpeed);
 
         private void Awake()
         {
@@ -62,9 +63,6 @@ namespace Player.Movement
             
             //Correct Speed
             SpeedLimit();
-            
-            //Check if Cursor is visible
-            if (Cursor.visible) Cursor.visible = false;
         }
 
         private void FixedUpdate()
@@ -177,6 +175,17 @@ namespace Player.Movement
                 Vector3 limitedVel = flatVel.normalized * _speed;
                 _rb.velocity = new Vector3(limitedVel.x, _rb.velocity.y, limitedVel.z);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="walkSpeed"></param>
+        /// <param name="runSpeed"></param>
+        public void SpeedAffected(float walkSpeed, float runSpeed)
+        {
+            moveSpeed = walkSpeed;
+            this.runSpeed = runSpeed;
         }
 
         #endregion

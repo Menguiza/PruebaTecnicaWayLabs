@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Daniel Hoyos/Grab and Drop.unity
-    guid: 249d20273af5c994387559e4aeb1b07d
+    path: Assets/Scenes/Daniel Hoyos/Menu.unity
+    guid: 8069721ce892ee948be3b10f0d5863cb
+  - enabled: 1
+    path: Assets/Scenes/Daniel Hoyos/Releases/1.0.unity
+    guid: 4383f7943f1f7234abd3af7c02193dd0
   m_configObjects: {}

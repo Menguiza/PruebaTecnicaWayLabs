@@ -1,5 +1,8 @@
+using System;
 using Player.ObjectGrabbing;
+using Props.Interactables;
 using Props.Pickables;
+using UI.Inventory;
 using UI.Utils;
 using UnityEngine;
 
@@ -11,12 +14,18 @@ namespace UI
         [Header("Throwable objects UI")] 
         [SerializeField] private FollowAtWorld grabIcon;
         [SerializeField] private FollowAtWorld throwIcon;
+
+        [Header("Interactable objects UI")] 
+        [SerializeField] private FollowAtWorld interactableIcon;
         
         //Needed references
         [Header("References")] 
         [SerializeField] private GrabDrop _grabDrop;
+        
+        //Internally needed parameters
+        private RaycastHit hit;
 
-        private void FixedUpdate()
+        private void Update()
         {
             //Check if player is holding something
             if (_grabDrop.HandsBusy)
@@ -59,16 +68,33 @@ namespace UI
         private void CheckPickableOnRange()
         {
             //Check if ray has hit info
-            if(Physics.Raycast(_grabDrop.transform.position, _grabDrop.transform.forward.normalized, out RaycastHit hit, _grabDrop.DetectionRange))
+            if(Physics.Raycast(_grabDrop.transform.position, _grabDrop.transform.forward.normalized, out hit, _grabDrop.DetectionRange))
             {
                 //Check if hit object has implemented "IPickable"
-                if (hit.collider.TryGetComponent(out IPickable pickable) )
+                if (hit.collider.TryGetComponent(out IPickable pickable))
                 {
                     //Check if grab icon is already active
                     if(!grabIcon.gameObject.activeSelf) grabIcon.gameObject.SetActive(true);
                     
                     //Send hit info in order to accomplish follow behavior
                     grabIcon.AssignLookAt(hit.transform);
+                    return;
+                }
+                
+                //Check if hit object has implemented "IInteractable"
+                if (hit.collider.TryGetComponent(out IInteractable interactable))
+                {
+                    //Check if interactable icon is already active
+                    if(!interactableIcon.gameObject.activeSelf) interactableIcon.gameObject.SetActive(true);
+                    
+                    //Send hit info in order to accomplish follow behavior
+                    interactableIcon.AssignLookAt(hit.transform);
+                    
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        interactable.Interact();
+                    }
+                    
                     return;
                 }
             }
@@ -88,9 +114,11 @@ namespace UI
         {
             grabIcon.gameObject.SetActive(false);
             throwIcon.gameObject.SetActive(false);
+            interactableIcon.gameObject.SetActive(false);
             
             grabIcon.UnAssignLookAt();
             throwIcon.UnAssignLookAt();
+            interactableIcon.UnAssignLookAt();
         }
 
         #endregion
